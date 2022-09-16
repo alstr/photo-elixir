@@ -1,0 +1,80 @@
+{% extends "photo_elixir/base.html" %}
+
+{% load static %}
+
+{% block extrastyles %}
+
+    <link rel="stylesheet" href="{% static 'leaflet/css/leaflet.css' %}" type="text/css">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="content-flex">
+        <div class="photo-container">
+            <div id="photo-details"></div>
+            <img id="photo" src="" />
+            <div class="photo-container-bg"></div>
+        </div>
+        <div class="sidebar">
+            <div id="map"></div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extrascripts %}
+
+    <script src="{% static 'leaflet/js/leaflet.js' %}"></script>
+    <script>
+        let map = L.map( "map", { zoomControl: false } );
+        L.tileLayer( "https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap"
+        } ).addTo( map );
+        let marker = null;
+        const $photoDetails = $( "#photo-details" );
+        const $sidebar = $( ".sidebar" );
+        const $photoContainer = $( ".photo-container" );
+
+        getPhoto();
+        setInterval( getPhoto, 30000 );
+
+        function getPhoto() {
+            $.ajax( {
+                url: "/get-photo/",
+                success: function ( data ) {
+                    $photoContainer.fadeOut( function() {
+                        $( "#photo" ).attr( "src", data[ "photo" ] );
+                        $( ".photo-container-bg" ).css( "background-image", `url('${ data[ "photo" ] }')` );
+
+                        if ( data.hasOwnProperty( "date_taken" )) {
+                            $photoDetails.show();
+                            $photoDetails.text( data[ "date_taken" ] );
+                        } else {
+                            $photoDetails.hide();
+                        }
+                        $photoContainer.fadeIn();
+                    } );
+
+                    if ( marker !== null ) {
+                        marker.remove();
+                    }
+                    if ( data.hasOwnProperty( "location" ) ) {
+                        $sidebar.show();
+                        const loc = data[ "location" ];
+                        if ( marker === null ) {
+                            map.setView( [ loc[ "lat" ], loc[ "lng" ] ], 14 );
+                        } else {
+                            map.flyTo( [ loc[ "lat" ], loc[ "lng" ] ], 14 );
+                        }
+                        marker = L.marker( [ loc[ "lat" ], loc[ "lng" ] ] ).addTo( map );
+                    } else {
+                        $sidebar.hide();
+                        marker = null;
+                    }
+                }
+            } );
+        }
+    </script>
+
+{% endblock %}

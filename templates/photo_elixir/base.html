@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Elixir</title>
+    <link rel="stylesheet" href="{% static 'photo_elixir/css/style.css' %}" type="text/css">
+    {% block extrastyles %}
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+    <script type="text/javascript" src="{% static 'jquery/js/jquery.min.js' %}"></script>
+    {% block extrascripts %}
+    {% endblock %}
+</body>
+</html>
