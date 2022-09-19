@@ -43,18 +43,15 @@
             $.ajax( {
                 url: "/get-photo/",
                 success: function ( data ) {
-                    $photoContainer.fadeOut( function() {
-                        $( "#photo" ).attr( "src", data[ "photo" ] );
-                        $( ".photo-container-bg" ).css( "background-image", `url('${ data[ "photo" ] }')` );
+                    $( "#photo" ).attr( "src", data[ "photo" ] );
+                    $( ".photo-container-bg" ).css( "background-image", `url('${ data[ "photo" ] }')` );
 
-                        if ( data.hasOwnProperty( "date_taken" )) {
-                            $photoDetails.show();
-                            $photoDetails.text( data[ "date_taken" ] );
-                        } else {
-                            $photoDetails.hide();
-                        }
-                        $photoContainer.fadeIn();
-                    } );
+                    if ( data.hasOwnProperty( "date_taken" )) {
+                        $photoDetails.show();
+                        $photoDetails.text( data[ "date_taken" ] );
+                    } else {
+                        $photoDetails.hide();
+                    }
 
                     if ( marker !== null ) {
                         marker.remove();
@@ -62,11 +59,7 @@
                     if ( data.hasOwnProperty( "location" ) ) {
                         $sidebar.show();
                         const loc = data[ "location" ];
-                        if ( marker === null ) {
-                            map.setView( [ loc[ "lat" ], loc[ "lng" ] ], 14 );
-                        } else {
-                            map.flyTo( [ loc[ "lat" ], loc[ "lng" ] ], 14 );
-                        }
+                        map.setView( [ loc[ "lat" ], loc[ "lng" ] ], 14 );
                         marker = L.marker( [ loc[ "lat" ], loc[ "lng" ] ] ).addTo( map );
                     } else {
                         $sidebar.hide();
