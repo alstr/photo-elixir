@@ -39,10 +39,7 @@ class Photo(models.Model):
             split_name = self.image.file.name.split('.')
             extension = split_name[len(split_name) - 1]
 
-            if 'png' in extension.lower():
-                img = Image.open(self.image).convert('RGBA')
-            else:
-                img = Image.open(self.image).convert('RGB')
+            img = Image.open(self.image)
             longest_side = max(img.size[0], img.size[1])
             side_limit = 1024
             if longest_side > side_limit:
