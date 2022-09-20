@@ -35,14 +35,28 @@ class Photo(models.Model):
         if not self.pk:
             register_heif_opener()
 
-            img = Image.open(self.image.file)
-            img = ImageOps.exif_transpose(img)
-
             file_stream = BytesIO()
             split_name = self.image.file.name.split('.')
             extension = split_name[len(split_name) - 1]
-            extension = extension.upper().replace('JPG', 'JPEG').replace('HEIC', 'JPEG')
-            img.save(file_stream, extension)
+
+            if 'png' in extension.lower():
+                img = Image.open(self.image).convert('RGBA')
+            else:
+                img = Image.open(self.image).convert('RGB')
+            longest_side = max(img.size[0], img.size[1])
+            side_limit = 1024
+            if longest_side > side_limit:
+                if img.size[0] > img.size[1]:
+                    new_width = side_limit
+                    new_height = int(round((side_limit / float(img.size[0])) * img.size[1]))
+                else:
+                    new_height = side_limit
+                    new_width = int(round((side_limit / float(img.size[1])) * img.size[0]))
+
+                img = img.resize((new_width, new_height), Image.ANTIALIAS)
+
+            img = ImageOps.exif_transpose(img)
+            img.save(file_stream, 'JPEG')
             file_stream.seek(0)
             split_name.pop()
             file_name = '_'.join(split_name) + '.' + extension
