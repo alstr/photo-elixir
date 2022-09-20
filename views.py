@@ -7,6 +7,8 @@ from django.contrib import messages
 from .models import Photo
 from .forms import PhotoForm
 
+from random import *
+
 
 def photo_view(request):
     return render(request, 'photo_elixir/photo.html')
@@ -20,7 +22,8 @@ def get_photo(request):
         oldest_last_shown = Photo.objects.all().order_by('last_shown')[0].last_shown
         photos = Photo.objects.filter(last_shown=oldest_last_shown)
 
-    photo = photos.order_by('?')[0]
+    random_index = randint(0, photos.count() - 1)
+    photo = photos[random_index]
     data = {
         'photo': photo.image.url
     }
