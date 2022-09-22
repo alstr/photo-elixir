@@ -81,11 +81,11 @@ This guide uses the Django development server, which (security disclaimer) is no
 
 Although Django's development server is convenient, if using it for prolonged testing you may want to edit Django's `BaseDatabaseWrapper` class to set `force_debug_cursor` to `False` and disable query logging, which can be expensive.
 
-On low memory Pi's (<=1GB), it can be helpful to enable the swap file on your Pi.
+On low memory Pis (<=1GB), it can be helpful to enable the swap file on your Pi.
 
 ### Other considerations
 
-Timezone is currently set to Europe/London but this could be moved into the settings file to allow for easier configuration.
+The timezone is currently set to Europe/London but this could be moved into the settings file to allow for easier configuration.
 
 ### Hardware
 
