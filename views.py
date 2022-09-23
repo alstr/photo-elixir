@@ -11,16 +11,24 @@ from random import *
 
 
 def photo_view(request):
+    if 'session_photos' in request.session:
+        request.session.pop('session_photos')
     return render(request, 'photo_elixir/photo.html')
 
 
 def get_photo(request):
     now = timezone.now()
 
-    photos = Photo.objects.filter(Q(last_shown=None))
+    session_photos = request.session.get('session_photos', [])
+    all_photos = Photo.objects.all().exclude(pk__in=session_photos)
+    if not all_photos.exists():
+        session_photos = []
+        all_photos = Photo.objects.all()
+
+    photos = all_photos.filter(Q(last_shown=None))
     if not photos.exists():
-        oldest_last_shown = Photo.objects.all().order_by('last_shown')[0].last_shown
-        photos = Photo.objects.filter(last_shown=oldest_last_shown)
+        oldest_last_shown = all_photos.order_by('last_shown')[0].last_shown
+        photos = all_photos.filter(last_shown=oldest_last_shown)
 
     random_index = randint(0, photos.count() - 1)
     photo = photos[random_index]
@@ -36,6 +44,8 @@ def get_photo(request):
         }
     photo.last_shown = now
     photo.save()
+    session_photos.append(photo.pk)
+    request.session['session_photos'] = session_photos
     return JsonResponse(data)
 
 
