@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.html import format_html
 
 from PIL import Image, ExifTags, ImageOps
 from pillow_heif import register_heif_opener
@@ -106,3 +107,18 @@ class Photo(models.Model):
             date_taken_normalised = local_tz.normalize(self.date_taken.astimezone(local_tz))
             return date_taken_normalised.strftime('%a %d %b %Y, %H:%M')
         return 'No date'
+
+    def render_thumbnail_tag(self):
+        return format_html('<img class="thumbnail" '
+                           'style="width: 128px; height: 128px; object-fit: cover; object-position: center" '
+                           'src="' + self.image.url + '">')
+
+    def render_preview_tag(self):
+        return format_html('<img class="preview" '
+                           'style="width: 512px; height: 384px; object-fit: contain; object-position: center" '
+                           'src="' + self.image.url + '">')
+
+    render_thumbnail_tag.short_description = 'Image'
+    render_thumbnail_tag.allow_tags = True
+    render_preview_tag.short_description = 'Image'
+    render_preview_tag.allow_tags = True
