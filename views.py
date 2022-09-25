@@ -37,7 +37,7 @@ def get_photo(request):
     }
     if photo.date_taken is not None:
         data['date_taken'] = photo.format_date_taken()
-    if photo.location is not None:
+    if photo.location is not None and photo.location.lat is not None and photo.location.lng is not None:
         data['location'] = {
             'lat': photo.location.lat,
             'lng': photo.location.lng
