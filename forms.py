@@ -11,5 +11,5 @@ class PhotoForm(forms.ModelForm):
             'image': 'Photo(s)'
         }
         widgets = {
-            'image': forms.FileInput(attrs={'multiple': True})
+            'image': forms.FileInput(attrs={'multiple': True, 'accept': ''})
         }
