@@ -56,6 +56,13 @@
                     if ( marker !== null ) {
                         marker.remove();
                     }
+
+                    map.eachLayer( function ( layer ) {
+                        if ( layer !== map.tileLayer ) {
+                            map.removeLayer( layer );
+                        }
+                    } );
+
                     if ( data.hasOwnProperty( "location" ) ) {
                         $sidebar.show();
                         const loc = data[ "location" ];
@@ -65,6 +72,8 @@
                         $sidebar.hide();
                         marker = null;
                     }
+
+                    map.invalidateSize();
                 }
             } );
         }
