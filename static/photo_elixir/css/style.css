@@ -35,6 +35,7 @@ body {
 .photo-container {
     width: 80%;
     flex-grow: 1;
+    overflow: hidden;
 }
 #photo {
     width: 100%;
@@ -65,19 +66,19 @@ body {
     transform-origin: center center;
 }
 .sidebar {
-    width: 20%;
+    width: 25%;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 77px);
     background: rgba(255, 255, 255, 0.5);
-    padding: 40px;
+    padding: 30px 35px 47px 20px;
     gap: 20px;
 }
 
 #date-clock {
     display: flex;
     align-items: center;
-    font-size: 24px;
+    font-size: 14px;
 }
 #date-clock > div {
     width: 50%;
@@ -85,14 +86,14 @@ body {
 .split-flap-clock {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 2.5px;
     font-family: "Ubuntu Mono";
     font-weight: bold;
 }
 .digit {
     position: relative;
     width: 50px;
-    height: 60px;
+    height: 30px;
     perspective: 200px; /* Adds 3D effect */
     flex-grow: 1;
 }
@@ -114,9 +115,9 @@ body {
     height: 100%;
     background: linear-gradient(to bottom, #222, #000);
     color: white;
-    font-size: 44px;
+    font-size: 18px;
     text-align: center;
-    line-height: 60px;
+    line-height: 30px;
     border-radius: 5px;
     backface-visibility: hidden;
 }
@@ -151,22 +152,19 @@ body {
 }
 #colon {
     position: relative;
-    top: -3px;
+    top: -2px;
     font-weight: normal;
 }
 
 #theme-schedule {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eeeeee;
+    gap: 5px;
 }
 #theme-schedule > div {
     display: flex;
     justify-content: space-between;
-    font-size: 18px;
+    font-size: 14px;
 }
 #current-theme-name, #next-theme-name {
     font-weight: bold;
@@ -179,8 +177,9 @@ body {
 }
 .leaflet-popup-content {
     text-align: center;
-    font-size: 18px !important;
+    font-size: 14px !important;
     font-family: Ubuntu;
+    margin: 5px !important;
 }
 
 #weather {
@@ -188,9 +187,6 @@ body {
     align-items: center;
     justify-content: space-evenly;
     text-align: center;
-    background: white;
-    padding: 25px;
-    border-radius: 5px;
     position: relative;
 }
 #forecast-container {
@@ -200,22 +196,22 @@ body {
 .forecast {
     display: flex;
     flex-direction: column;
-    margin: 0 15px;
+    margin: 0 10px;
+	font-size: 14px;
 }
 #weather i {
-    font-size: 36px;
-    margin: 10px 0;
+    font-size: 24px;
+    margin: 5px 0;
     display: block;
 }
 #weather-temp {
-    font-size: 48px;
+    font-size: 24px;
 }
 #weather-credit {
     position: absolute;
-    right: 0;
-    top: calc(100% + 10px);
-    font-size: 12px;
-    text-align: right;
+    right: -25px;
+    font-size: 10px;
+	rotate: 90deg;
 }
 .upload-form {
     display: flex;

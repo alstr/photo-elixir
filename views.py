@@ -91,11 +91,12 @@ def get_current_and_next_theme():
 def is_far(photo_location):
     if photo_location and photo_location.lat is not None and photo_location.lng is not None:
         dist = geodesic(HOME_LOCATION, (photo_location.lat, photo_location.lng)).km
-        return dist > 500  # consider "travel" if > 500 km away
+        return dist > 200  # consider "travel" if > 200 km away
     return False
 
 
 def filter_photos_by_theme(queryset, theme):
+    theme = theme[1]
     now = timezone.now()
     today = now.date()
     if theme == 'new_photos':

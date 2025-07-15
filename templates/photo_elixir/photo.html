@@ -16,41 +16,39 @@
             <div class="photo-container-bg"></div>
         </div>
         <div class="sidebar">
-            <div>
-                <div id="date-clock">
-                    <div id="date"></div>
-                    <div id="clock" class="split-flap-clock">
-                        <div class="digit" id="h1">
-                            <div class="top half"></div>
-                            <div class="bottom half"></div>
-                            <div class="new-top half"></div>
-                        </div>
-                        <div class="digit" id="h2">
-                            <div class="top half"></div>
-                            <div class="bottom half"></div>
-                            <div class="new-top half"></div>
-                        </div>
-                        <div class="digit">
-                            <div class="half">
-                                <div id="colon">:</div>
-                            </div>
-                        </div>
-                        <div class="digit" id="m1">
-                            <div class="top half"></div>
-                            <div class="bottom half"></div>
-                            <div class="new-top half"></div>
-                        </div>
-                        <div class="digit" id="m2">
-                            <div class="top half"></div>
-                            <div class="bottom half"></div>
-                            <div class="new-top half"></div>
+            <div id="date-clock">
+                <div id="date"></div>
+                <div id="clock" class="split-flap-clock">
+                    <div class="digit" id="h1">
+                        <div class="top half"></div>
+                        <div class="bottom half"></div>
+                        <div class="new-top half"></div>
+                    </div>
+                    <div class="digit" id="h2">
+                        <div class="top half"></div>
+                        <div class="bottom half"></div>
+                        <div class="new-top half"></div>
+                    </div>
+                    <div class="digit">
+                        <div class="half">
+                            <div id="colon">:</div>
                         </div>
                     </div>
+                    <div class="digit" id="m1">
+                        <div class="top half"></div>
+                        <div class="bottom half"></div>
+                        <div class="new-top half"></div>
+                    </div>
+                    <div class="digit" id="m2">
+                        <div class="top half"></div>
+                        <div class="bottom half"></div>
+                        <div class="new-top half"></div>
+                    </div>
                 </div>
-                <div id="theme-schedule">
-                    <div><div class="muted">Now Showing:</div><div><span id="current-theme-name"></span>, <span id="current-theme-time"></span></div></div>
-                    <div><div class="muted">Up Next:</div><div><span id="next-theme-name"></span>, <span id="next-theme-time"></span></div></div>
-                </div>
+            </div>
+            <div id="theme-schedule">
+                <div><div class="muted">Now:</div><div><span id="current-theme-name"></span>, <span id="current-theme-time"></span></div></div>
+                <div><div class="muted">Next:</div><div><span id="next-theme-name"></span>, <span id="next-theme-time"></span></div></div>
             </div>
             <div id="map"></div>
             <div id="weather">
@@ -68,13 +66,8 @@
     <script src="{% static 'leaflet/js/leaflet.js' %}"></script>
     <script>
         let map = L.map( "map", { zoomControl: false } );
-        L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-            attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/' target='_blank'>Mapbox</a>",
-            detectRetina: true,
-            id: "mnydigital/cl8wsfjhj004p15n2ge3z6kqa",
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: "pk.eyJ1IjoibW55ZGlnaXRhbCIsImEiOiJja2FzODR4ZGUwaGVwMnNvNWNtN2NoNjZmIn0.CDeYca3XEaFnyrwAGssF6w"
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap"
         } ).addTo(map);
         let marker = null;
         const $photoContainer = $( ".photo-container" );
@@ -89,6 +82,11 @@
                     const $img = $( "#photo" );
                     $img.removeClass( "kenburns-animate" );
                     $img.attr( "src", data[ "photo" ] );
+					if ( $img.width() > $img.height() ) {
+						$img.css( "object-fit", "cover" );
+					} else {
+						$img.css( "object-fit", "contain" );
+					}
                     if ( !$img[ 0 ].naturalWidth < $img.width() || !$img[ 0 ].naturalHeight < $img.height() ) {
                         $img.addClass( "kenburns-animate" );
                     }
@@ -108,7 +106,7 @@
                     if ( data.hasOwnProperty( "location" ) ) {
                         loc = data[ "location" ];
                     } else {
-                        zoom = 5;
+                        zoom = 4;
                         loc = {
                             'lat': 25.0000,
                             'lng': -71.0000
@@ -123,7 +121,7 @@
 
                     map.setView( [ loc[ "lat" ], loc[ "lng" ] ], zoom );
                     marker = L.marker( [ loc[ "lat" ], loc[ "lng" ] ] ).addTo( map );
-                    const popupContent = `Photo taken:<br><strong>${ dateTaken }</strong>`;
+                    const popupContent = `<strong>${ dateTaken }</strong>`;
                     marker.bindPopup( popupContent, {
                         closeButton: false
                     } ).openPopup();
