@@ -5,19 +5,59 @@
 {% block extrastyles %}
 
     <link rel="stylesheet" href="{% static 'leaflet/css/leaflet.css' %}" type="text/css">
-
+    <link rel="stylesheet" href="{% static 'photo_elixir/css/bootstrap-icons.min.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
 
     <div class="content-flex">
         <div class="photo-container">
-            <div id="photo-details"></div>
             <img id="photo" src="" />
             <div class="photo-container-bg"></div>
         </div>
         <div class="sidebar">
+            <div>
+                <div id="date-clock">
+                    <div id="date"></div>
+                    <div id="clock" class="split-flap-clock">
+                        <div class="digit" id="h1">
+                            <div class="top half"></div>
+                            <div class="bottom half"></div>
+                            <div class="new-top half"></div>
+                        </div>
+                        <div class="digit" id="h2">
+                            <div class="top half"></div>
+                            <div class="bottom half"></div>
+                            <div class="new-top half"></div>
+                        </div>
+                        <div class="digit">
+                            <div class="half">
+                                <div id="colon">:</div>
+                            </div>
+                        </div>
+                        <div class="digit" id="m1">
+                            <div class="top half"></div>
+                            <div class="bottom half"></div>
+                            <div class="new-top half"></div>
+                        </div>
+                        <div class="digit" id="m2">
+                            <div class="top half"></div>
+                            <div class="bottom half"></div>
+                            <div class="new-top half"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="theme-schedule">
+                    <div><div class="muted">Now Showing:</div><div><span id="current-theme-name"></span>, <span id="current-theme-time"></span></div></div>
+                    <div><div class="muted">Up Next:</div><div><span id="next-theme-name"></span>, <span id="next-theme-time"></span></div></div>
+                </div>
+            </div>
             <div id="map"></div>
+            <div id="weather">
+                <div id="weather-temp">{{ temperature }}</div>
+                <div id="forecast-container"></div>
+                <div id="weather-credit" class="muted">BBC Weather</div>
+            </div>
         </div>
     </div>
 
@@ -28,12 +68,15 @@
     <script src="{% static 'leaflet/js/leaflet.js' %}"></script>
     <script>
         let map = L.map( "map", { zoomControl: false } );
-        L.tileLayer( "https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "© OpenStreetMap"
-        } ).addTo( map );
+        L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+            attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/' target='_blank'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/' target='_blank'>Mapbox</a>",
+            detectRetina: true,
+            id: "mnydigital/cl8wsfjhj004p15n2ge3z6kqa",
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: "pk.eyJ1IjoibW55ZGlnaXRhbCIsImEiOiJja2FzODR4ZGUwaGVwMnNvNWNtN2NoNjZmIn0.CDeYca3XEaFnyrwAGssF6w"
+        } ).addTo(map);
         let marker = null;
-        const $photoDetails = $( "#photo-details" );
-        const $sidebar = $( ".sidebar" );
         const $photoContainer = $( ".photo-container" );
 
         getPhoto();
@@ -43,34 +86,104 @@
             $.ajax( {
                 url: "/get-photo/",
                 success: function ( data ) {
-                    $( "#photo" ).attr( "src", data[ "photo" ] );
+                    const $img = $( "#photo" );
+                    $img.removeClass( "kenburns-animate" );
+                    $img.attr( "src", data[ "photo" ] );
+                    if ( !$img[ 0 ].naturalWidth < $img.width() || !$img[ 0 ].naturalHeight < $img.height() ) {
+                        $img.addClass( "kenburns-animate" );
+                    }
                     $( ".photo-container-bg" ).css( "background-image", `url('${ data[ "photo" ] }')` );
 
-                    if ( data.hasOwnProperty( "date_taken" )) {
-                        $photoDetails.show();
-                        $photoDetails.text( data[ "date_taken" ] );
-                    } else {
-                        $photoDetails.hide();
-                    }
+                    $( "#current-theme-name" ).text( data[ "current_theme_name" ] );
+                    $( "#current-theme-time" ).text( data[ "current_theme_time" ] );
+                    $( "#next-theme-name" ).text( data[ "next_theme_name" ] );
+                    $( "#next-theme-time" ).text( data[ "next_theme_time" ] );
 
                     if ( marker !== null ) {
                         marker.remove();
                     }
 
+                    let loc;
+                    let zoom = 14;
                     if ( data.hasOwnProperty( "location" ) ) {
-                        $sidebar.show();
-                        const loc = data[ "location" ];
-                        map.setView( [ loc[ "lat" ], loc[ "lng" ] ], 14 );
-                        marker = L.marker( [ loc[ "lat" ], loc[ "lng" ] ] ).addTo( map );
+                        loc = data[ "location" ];
                     } else {
-                        $sidebar.hide();
-                        marker = null;
+                        zoom = 5;
+                        loc = {
+                            'lat': 25.0000,
+                            'lng': -71.0000
+                        }
+                    }
+                    let dateTaken;
+                    if ( data.hasOwnProperty( "date_taken" )) {
+                        dateTaken = data[ "date_taken" ];
+                    } else {
+                        dateTaken = "Who knows?!";
                     }
 
+                    map.setView( [ loc[ "lat" ], loc[ "lng" ] ], zoom );
+                    marker = L.marker( [ loc[ "lat" ], loc[ "lng" ] ] ).addTo( map );
+                    const popupContent = `Photo taken:<br><strong>${ dateTaken }</strong>`;
+                    marker.bindPopup( popupContent, {
+                        closeButton: false
+                    } ).openPopup();
+
                     map.invalidateSize();
+
+                    const temperature = data[ "temperature" ];
+                    const forecast = data[ "forecast" ]
+                    if ( temperature && forecast ) {
+                        $( "#weather-temp" ).text( temperature );
+                        $( "#forecast-container" ).html( forecast );
+                    }
                 }
             } );
         }
+
+        function updateClock() {
+            const now = new Date();
+            const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' });
+            const date = now.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            const dateStr = `${weekday}<br>${date}`;
+            $( "#date" ).html( dateStr );
+            const timeStr = now.toTimeString().slice(0, 5);
+
+            const digits = [
+                { id: "h1", value: timeStr[0] },
+                { id: "h2", value: timeStr[1] },
+                { id: "m1", value: timeStr[3] },
+                { id: "m2", value: timeStr[4] },
+            ];
+
+            digits.forEach(digit => {
+                const digitEl = document.getElementById(digit.id);
+                const topEl = digitEl.querySelector(".top");
+                const bottomEl = digitEl.querySelector(".bottom");
+                const newTopEl = digitEl.querySelector(".new-top");
+
+                if (topEl.innerText !== digit.value) {
+                    newTopEl.innerText = digit.value;
+                    newTopEl.classList.add("flip-bottom");
+
+                    topEl.classList.add("flip-top");
+
+                    setTimeout(() => {
+                        topEl.innerText = digit.value;
+                        bottomEl.innerText = digit.value;
+                        topEl.classList.remove("flip-top");
+                        newTopEl.classList.remove("flip-bottom");
+                    }, 300);
+                }
+            });
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 
 {% endblock %}

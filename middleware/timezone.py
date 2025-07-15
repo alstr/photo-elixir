@@ -1,4 +1,4 @@
-import pytz
+from zoneinfo import ZoneInfo
 
 from django.utils import timezone
 from django.utils.deprecation import MiddlewareMixin
@@ -10,6 +10,6 @@ class TimezoneMiddleware(MiddlewareMixin):
     def process_request(self, request):
         tzname = 'Europe/London'
         if tzname:
-            timezone.activate(pytz.timezone(tzname))
+            timezone.activate(ZoneInfo(tzname))
         else:
             timezone.deactivate()

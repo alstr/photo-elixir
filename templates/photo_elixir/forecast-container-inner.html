@@ -1,0 +1,40 @@
+{% for day in forecast %}
+    <div class="forecast">
+        <div class="weather-day muted">{{ day.day }}</div>
+        <div class="weather-icon">
+            {% with summary=day.summary|lower %}
+                {% if summary == 'sunny' %}
+                    <i class="bi bi-sun"></i>
+                {% elif summary == 'sunny intervals' %}
+                    <i class="bi bi-cloud-sun"></i>
+                {% elif summary == 'thundery showers' %}
+                    <i class="bi bi-cloud-lightning-rain"></i>
+                {% elif 'thunder' in summary %}
+                    <i class="bi bi-cloud-lightning"></i>
+                {% elif summary == 'light cloud' or summary == 'thick cloud' %}
+                    <i class="bi bi-cloud"></i>
+                {% elif summary == 'light rain' %}
+                    <i class="bi bi-cloud-rain"></i>
+                {% elif summary == 'heavy rain' %}
+                    <i class="bi bi-cloud-rain-heavy"></i>
+                {% elif summary == 'drizzle' %}
+                    <i class="bi bi-cloud-drizzle"></i>
+                {% elif 'mist' in summary or 'fog' in summary %}
+                    <i class="bi bi-cloud-haze"></i>
+                {% elif 'sleet' in summary %}
+                    <i class="bi bi-cloud-sleet"></i>
+                {% elif 'snow' in summary %}
+                    <i class="bi bi-cloud-snow"></i>
+                {% elif 'wind' in summary %}
+                    <i class="bi bi-wind"></i>
+                {% else %}
+                   <i class="bi bi-rainbow"></i>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="weather-high-low">
+            <div>{{ day.min_temp }}</div>
+            <div>{{ day.max_temp }}</div>
+        </div>
+    </div>
+{% endfor %}

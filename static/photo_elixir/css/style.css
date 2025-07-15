@@ -2,8 +2,29 @@ html, body {
     margin: 0;
     padding: 0;
 }
+@font-face {
+    font-family: "Ubuntu";
+    src: url("fonts/Ubuntu-Regular.woff2") format("woff2");
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Ubuntu";
+    src: url("fonts/Ubuntu-Bold.woff2") format("woff2");
+    font-weight: bold;
+}
+@font-face {
+    font-family: "Ubuntu Mono";
+    src: url("fonts/UbuntuMono-Regular.woff2") format("woff2");
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Ubuntu Mono";
+    src: url("fonts/UbuntuMono-Bold.woff2") format("woff2");
+    font-weight: bold;
+}
 body {
-    font-family: "Quicksand", sans-serif;
+    font-family: "Ubuntu", sans-serif;
+    overflow: hidden;
 }
 .content-flex {
     display: flex;
@@ -13,8 +34,6 @@ body {
 }
 .photo-container {
     width: 80%;
-    overflow: hidden;
-    position: relative;
     flex-grow: 1;
 }
 #photo {
@@ -33,25 +52,170 @@ body {
     z-index: -1;
     filter: blur(10px);
 }
+@keyframes kenburns {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+.kenburns-animate {
+    animation: kenburns 20s ease-in-out forwards;
+    transform-origin: center center;
+}
 .sidebar {
     width: 20%;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 80px);
+    background: rgba(255, 255, 255, 0.5);
+    padding: 40px;
+    gap: 20px;
 }
-#photo-details {
-    padding: 15px;
-    box-sizing: border-box;
-    position: absolute;
-    left: 40px;
-    top: 25px;
-    background: purple;
-    color: white;
-    border-radius: 15px;
+
+#date-clock {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+}
+#date-clock > div {
+    width: 50%;
+}
+.split-flap-clock {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: "Ubuntu Mono";
     font-weight: bold;
 }
-#map {
+.digit {
+    position: relative;
+    width: 50px;
+    height: 60px;
+    perspective: 200px; /* Adds 3D effect */
+    flex-grow: 1;
+}
+.digit::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    transform: translateY(-50%);
+    z-index: 999;
+}
+.half {
+    position: absolute;
+    width: 100%;
     height: 100%;
+    background: linear-gradient(to bottom, #222, #000);
+    color: white;
+    font-size: 44px;
+    text-align: center;
+    line-height: 60px;
+    border-radius: 5px;
+    backface-visibility: hidden;
+}
+.top {
+    top: 0;
+    z-index: 2;
+    transform-origin: bottom;
+}
+.bottom {
+    top: 0;
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+.new-top {
+    top: 0;
+    z-index: 3;
+    opacity: 0;
+}
+.flip-top {
+    animation: flipTop 0.3s ease-in-out forwards;
+}
+@keyframes flipTop {
+    0% { transform: rotateX(0deg); }
+    100% { transform: rotateX(-90deg); }
+}
+.flip-bottom {
+    animation: flipBottom 0.3s ease-in-out forwards;
+}
+@keyframes flipBottom {
+    0% { transform: rotateX(90deg); opacity: 0; }
+    100% { transform: rotateX(0deg); opacity: 1; }
+}
+#colon {
+    position: relative;
+    top: -3px;
+    font-weight: normal;
+}
+
+#theme-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
+}
+#theme-schedule > div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+}
+#current-theme-name, #next-theme-name {
+    font-weight: bold;
+}
+
+#map {
+    aspect-ratio: 1;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+.leaflet-popup-content {
+    text-align: center;
+    font-size: 18px !important;
+    font-family: Ubuntu;
+}
+
+#weather {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    text-align: center;
+    background: white;
+    padding: 25px;
+    border-radius: 5px;
+    position: relative;
+}
+#forecast-container {
+    position: relative;
+    display: flex;
+}
+.forecast {
+    display: flex;
+    flex-direction: column;
+    margin: 0 15px;
+}
+#weather i {
+    font-size: 36px;
+    margin: 10px 0;
+    display: block;
+}
+#weather-temp {
+    font-size: 48px;
+}
+#weather-credit {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    font-size: 12px;
+    text-align: right;
 }
 .upload-form {
     display: flex;
@@ -68,4 +232,7 @@ body {
     background: purple;
     color: white;
     padding: 0 15px;
+}
+.muted {
+    opacity: 0.5;
 }
