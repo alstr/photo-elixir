@@ -174,7 +174,7 @@ def get_photo(request):
 
     def format_theme_time(start_hour):
         end_hour = (start_hour + 2) % 24
-        return f'{start_hour:02}:00 - {end_hour:02}:00'
+        return f'{start_hour:02}:00-{end_hour:02}:00'
 
     data = {
         'photo': photo.image.url,

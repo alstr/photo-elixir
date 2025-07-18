@@ -52,7 +52,7 @@
             </div>
             <div id="map"></div>
             <div id="weather">
-                <div><i class="bi bi-thermometer"></i><span id="weather-temp">{{ temperature }}</span></div>
+                <div id="temperature-container"><i class="bi bi-thermometer"></i><span id="weather-temp">{{ temperature }}</span></div>
                 <div id="forecast-container"></div>
                 <div id="weather-credit" class="muted">BBC Weather</div>
             </div>
@@ -138,7 +138,7 @@
             const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' });
             const date = now.toLocaleDateString('en-GB', {
                 day: 'numeric',
-                month: 'long',
+                month: 'short',
                 year: 'numeric'
             });
 

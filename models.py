@@ -10,7 +10,6 @@ import os
 from io import BytesIO
 from zoneinfo import ZoneInfo
 import mimetypes
-import pytz
 
 
 class Location(models.Model):
@@ -103,9 +102,9 @@ class Photo(models.Model):
 
     def format_date_taken(self):
         if self.date_taken is not None:
-            local_tz = pytz.timezone('Europe/London')
-            date_taken_normalised = local_tz.normalize(self.date_taken.astimezone(local_tz))
-            return date_taken_normalised.strftime('%a %d %b %Y, %H:%M')
+            local_tz = ZoneInfo('Europe/London')
+            date_taken_local = self.date_taken.astimezone(local_tz)
+            return f"{date_taken_local:%a} {date_taken_local.day} {date_taken_local:%b %Y, %H:%M}"
         return 'No date'
 
     def render_thumbnail_tag(self):
