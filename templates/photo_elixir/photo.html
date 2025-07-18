@@ -47,12 +47,12 @@
                 </div>
             </div>
             <div id="theme-schedule">
-                <div><div class="muted">Now:</div><div><span id="current-theme-name"></span>, <span id="current-theme-time"></span></div></div>
-                <div><div class="muted">Next:</div><div><span id="next-theme-name"></span>, <span id="next-theme-time"></span></div></div>
+                <div><span id="current-theme-time"></span><span id="current-theme-name"></span></div>
+                <div class="muted"><span id="next-theme-time"></span><span id="next-theme-name"></span></div>
             </div>
             <div id="map"></div>
             <div id="weather">
-                <div id="weather-temp">{{ temperature }}</div>
+                <div><i class="bi bi-thermometer"></i><span id="weather-temp">{{ temperature }}</span></div>
                 <div id="forecast-container"></div>
                 <div id="weather-credit" class="muted">BBC Weather</div>
             </div>
@@ -67,7 +67,7 @@
     <script>
         let map = L.map( "map", { zoomControl: false } );
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "© OpenStreetMap"
+            attribution: "© <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener noreferrer'>OpenStreetMap</a>"
         } ).addTo(map);
         let marker = null;
         const $photoContainer = $( ".photo-container" );
@@ -82,11 +82,6 @@
                     const $img = $( "#photo" );
                     $img.removeClass( "kenburns-animate" );
                     $img.attr( "src", data[ "photo" ] );
-					if ( $img.width() > $img.height() ) {
-						$img.css( "object-fit", "cover" );
-					} else {
-						$img.css( "object-fit", "contain" );
-					}
                     if ( !$img[ 0 ].naturalWidth < $img.width() || !$img[ 0 ].naturalHeight < $img.height() ) {
                         $img.addClass( "kenburns-animate" );
                     }
@@ -115,16 +110,16 @@
                     let dateTaken;
                     if ( data.hasOwnProperty( "date_taken" )) {
                         dateTaken = data[ "date_taken" ];
-                    } else {
-                        dateTaken = "Who knows?!";
                     }
 
                     map.setView( [ loc[ "lat" ], loc[ "lng" ] ], zoom );
                     marker = L.marker( [ loc[ "lat" ], loc[ "lng" ] ] ).addTo( map );
                     const popupContent = `<strong>${ dateTaken }</strong>`;
-                    marker.bindPopup( popupContent, {
-                        closeButton: false
-                    } ).openPopup();
+                    if ( dateTaken ) {
+                        marker.bindPopup( popupContent, {
+                            closeButton: false
+                        } ).openPopup();
+                    }
 
                     map.invalidateSize();
 

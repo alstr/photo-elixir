@@ -13,13 +13,8 @@ html, body {
     font-weight: bold;
 }
 @font-face {
-    font-family: "Ubuntu Mono";
-    src: url("fonts/UbuntuMono-Regular.woff2") format("woff2");
-    font-weight: normal;
-}
-@font-face {
-    font-family: "Ubuntu Mono";
-    src: url("fonts/UbuntuMono-Bold.woff2") format("woff2");
+    font-family: "Oswald";
+    src: url("fonts/Oswald-Bold.woff2") format("woff2");
     font-weight: bold;
 }
 body {
@@ -29,17 +24,18 @@ body {
 .content-flex {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    height: 100vh;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    bottom: 17px;
+    left: 20px;
 }
 .photo-container {
     width: 80%;
-    flex-grow: 1;
     overflow: hidden;
 }
 #photo {
     width: 100%;
-    height: 100%;
     object-fit: contain;
 }
 .photo-container-bg {
@@ -66,19 +62,18 @@ body {
     transform-origin: center center;
 }
 .sidebar {
-    width: 25%;
+    width: 20%;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 77px);
     background: rgba(255, 255, 255, 0.5);
-    padding: 30px 35px 47px 20px;
+    padding: 30px 20px;
     gap: 20px;
 }
 
 #date-clock {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 16px;
 }
 #date-clock > div {
     width: 50%;
@@ -87,7 +82,7 @@ body {
     display: flex;
     align-items: center;
     gap: 2.5px;
-    font-family: "Ubuntu Mono";
+    font-family: "Oswald";
     font-weight: bold;
 }
 .digit {
@@ -115,9 +110,9 @@ body {
     height: 100%;
     background: linear-gradient(to bottom, #222, #000);
     color: white;
-    font-size: 18px;
+    font-size: 24px;
     text-align: center;
-    line-height: 30px;
+    line-height: 28px;
     border-radius: 5px;
     backface-visibility: hidden;
 }
@@ -152,8 +147,7 @@ body {
 }
 #colon {
     position: relative;
-    top: -2px;
-    font-weight: normal;
+    top: -3px;
 }
 
 #theme-schedule {
@@ -164,7 +158,7 @@ body {
 #theme-schedule > div {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: 16px;
 }
 #current-theme-name, #next-theme-name {
     font-weight: bold;
@@ -177,7 +171,7 @@ body {
 }
 .leaflet-popup-content {
     text-align: center;
-    font-size: 14px !important;
+    font-size: 16px !important;
     font-family: Ubuntu;
     margin: 5px !important;
 }
@@ -197,15 +191,18 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0 10px;
-	font-size: 14px;
+	font-size: 16px;
 }
-#weather i {
+#forecast-container i {
     font-size: 24px;
     margin: 5px 0;
     display: block;
 }
+.bi.bi-thermometer {
+    font-size: 30px;
+}
 #weather-temp {
-    font-size: 24px;
+    font-size: 30px;
 }
 #weather-credit {
     position: absolute;
